@@ -3,6 +3,7 @@ package com.the.buisensscard
 import android.graphics.*
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -21,14 +22,19 @@ class CardResult : AppCompatActivity() {
         binding = ActivityCardResultBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
+        binding.ivImgResult.visibility= View.INVISIBLE
+        binding.pbImg.visibility=View.VISIBLE
         Glide.with(this)
             .load(ConstantHelper.bitmap)
 
             .into(binding.ivImgResult)
 
+        binding.ivImgResult.visibility= View.VISIBLE
+        binding.pbImg.visibility=View.GONE
 
         binding.btAutoContras.setOnClickListener {
+            binding.ivImgResult.visibility= View.INVISIBLE
+            binding.pbImg.visibility=View.VISIBLE
             binding.sbContras.progress=17
             progressSeek=1.7f
             var bitmap = changeBitmapContrastBrightness(ConstantHelper.bitmap, 1.7f, 0f)
@@ -37,18 +43,26 @@ class CardResult : AppCompatActivity() {
                 .load(bitmap)
 
                 .into(binding.ivImgResult)
+            binding.ivImgResult.visibility= View.VISIBLE
+            binding.pbImg.visibility=View.GONE
         }
 
         binding.btNormalMode.setOnClickListener {
+            binding.ivImgResult.visibility= View.INVISIBLE
+            binding.pbImg.visibility=View.VISIBLE
             Glide.with(this)
                 .load(ConstantHelper.bitmap)
 
                 .into(binding.ivImgResult)
+            binding.ivImgResult.visibility= View.VISIBLE
+            binding.pbImg.visibility=View.GONE
         }
 
 
         binding.btBlackWhite.setOnClickListener{
+
             converToGrayScale()
+
         }
 
         binding.sbContras.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
@@ -74,6 +88,8 @@ class CardResult : AppCompatActivity() {
 
 
     fun converToGrayScale(){
+        binding.ivImgResult.visibility= View.INVISIBLE
+        binding.pbImg.visibility=View.VISIBLE
         var bitmap = changeBitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)?.let {
             getGrayScaleBitmap(
                 it
@@ -82,19 +98,24 @@ class CardResult : AppCompatActivity() {
 
         Glide.with(this)
             .load(bitmap)
-
             .into(binding.ivImgResult)
+        binding.ivImgResult.visibility= View.VISIBLE
+        binding.pbImg.visibility=View.GONE
 
     }
 
 
     fun changeContras(contrast: Float){
+        binding.ivImgResult.visibility= View.INVISIBLE
+        binding.pbImg.visibility=View.VISIBLE
         var bitmap = changeBitmapContrastBrightness(ConstantHelper.bitmap, contrast, 0f)
 
         Glide.with(this)
             .load(bitmap)
 
             .into(binding.ivImgResult)
+        binding.ivImgResult.visibility= View.VISIBLE
+        binding.pbImg.visibility=View.GONE
     }
 
 

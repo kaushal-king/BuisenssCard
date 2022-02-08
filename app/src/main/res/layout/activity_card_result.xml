@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".CardResult">
 
+    <ProgressBar
+        android:id="@+id/pb_img"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_img_result"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/iv_img_result"
         android:layout_width="match_parent"
@@ -64,7 +74,7 @@
         android:layout_height="wrap_content"
         android:text="Black-white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bt_auto_contras"
-        app:layout_constraintStart_toEndOf="@+id/bt_normal_mode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bt_normal_mode" />
 </androidx.constraintlayout.widget.ConstraintLayout>
