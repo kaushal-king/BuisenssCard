@@ -37,8 +37,6 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, CardCrop::class.java)
                 ConstantHelper.bitmap=bitmap
                 startActivity(intent)
-
-
             }
         }
 

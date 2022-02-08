@@ -3,7 +3,6 @@ package com.the.buisensscard
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -22,14 +21,10 @@ class CardCrop : AppCompatActivity() {
         setContentView(view)
         SmartCropper.buildImageDetector(this)
 
-
         binding.ivCrop.setImageToCrop(ConstantHelper.bitmap)
-        binding.btCropPhoto.visibility= View.VISIBLE
+        binding.btCropPhoto.visibility = View.VISIBLE
 
-
-
-        binding.btCropPhoto.setOnClickListener{
-
+        binding.btCropPhoto.setOnClickListener {
             val crop: Bitmap = binding.ivCrop.crop()
             Glide.with(this)
                 .load(crop)
@@ -38,14 +33,14 @@ class CardCrop : AppCompatActivity() {
                         .placeholder(R.drawable.imageloading)
                 )
                 .into(binding.ivCrop)
-            ConstantHelper.bitmap=crop
-            binding.btCropPhoto.visibility=View.GONE
-            binding.btRotate.visibility=View.VISIBLE
+            ConstantHelper.bitmap = crop
+            binding.btCropPhoto.visibility = View.GONE
+            binding.btRotate.visibility = View.VISIBLE
 
         }
 
-        binding.btRotate.setOnClickListener{
-            val crop:Bitmap= rotateBitmap(ConstantHelper.bitmap, 90.0F)
+        binding.btRotate.setOnClickListener {
+            val crop: Bitmap = rotateBitmap(ConstantHelper.bitmap, 90.0F)
             Glide.with(this)
                 .load(crop)
                 .apply(
@@ -53,27 +48,25 @@ class CardCrop : AppCompatActivity() {
                         .placeholder(R.drawable.imageloading)
                 )
                 .into(binding.ivCrop)
-            ConstantHelper.bitmap=crop
+            ConstantHelper.bitmap = crop
 
         }
 
-        binding.btCancel.setOnClickListener{
+        binding.btCancel.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-
             startActivity(intent)
             finish()
-
-
-
         }
+
         binding.btSaveCrop.setOnClickListener {
             val intent = Intent(this, CardResult::class.java)
             startActivity(intent)
             finish()
         }
-    }
-    private fun rotateBitmap(source: Bitmap, angle: Float): Bitmap {
 
+    }
+
+    private fun rotateBitmap(source: Bitmap, angle: Float): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(angle)
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)

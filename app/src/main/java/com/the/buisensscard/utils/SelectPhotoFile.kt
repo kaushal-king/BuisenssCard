@@ -31,8 +31,6 @@ import java.util.*
 class SelectPhotoFile(activity: Activity) {
 
     private var mPhotoFile: File? = null
-
-
     private var mActivity = activity
 
     companion object {
@@ -45,7 +43,6 @@ class SelectPhotoFile(activity: Activity) {
         }
     }
 
-
     fun selectImageType() {
         selectImageType(mActivity)
     }
@@ -53,7 +50,6 @@ class SelectPhotoFile(activity: Activity) {
     fun getImageFile(): File {
         return mPhotoFile!!
     }
-
 
     private fun selectImageType(context: Context) {
         val items = arrayOf<CharSequence>(
