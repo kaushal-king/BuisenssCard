@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.the.buisensscard">
+    package="com.the.businesscard">
 
     <application
         android:allowBackup="true"
@@ -21,15 +21,15 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
         <activity
-            android:name=".CardResult"
+            android:name="com.the.businesscard.CardResult"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".CardCrop"
+            android:name="com.the.businesscard.CardCrop"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.the.businesscard.MainActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>

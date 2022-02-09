@@ -1,4 +1,4 @@
-package com.the.buisensscard.utils
+package com.the.businesscard.utils
 
 import android.Manifest
 import android.app.Activity
@@ -20,7 +20,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.the.buisensscard.BuildConfig
+import com.the.businesscard.BuildConfig
 
 import java.io.File
 import java.io.IOException
@@ -146,7 +146,7 @@ class SelectPhotoFile(activity: Activity) {
         val storageDir: File =
             File(mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Businesscard")
         if (!storageDir.exists() && !storageDir.mkdirs()) {
-            Log.e("Businesscard", "failed to create directory")
+            Log.e("BusinessCard", "failed to create directory")
         }
         val image = File(storageDir.path + File.separator + imageFileName)
         Log.e("our file", image.toString())

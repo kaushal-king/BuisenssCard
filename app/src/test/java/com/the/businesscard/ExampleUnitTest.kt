@@ -1,4 +1,4 @@
-package com.the.buisensscard
+package com.the.businesscard
 
 import org.junit.Test
 
