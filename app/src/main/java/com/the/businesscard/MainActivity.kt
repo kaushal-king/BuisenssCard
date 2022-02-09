@@ -1,16 +1,14 @@
-package com.the.buisensscard
+package com.the.businesscard
 
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.the.buisensscard.databinding.ActivityMainBinding
-import com.the.buisensscard.utils.ConstantHelper
-import com.the.buisensscard.utils.SelectPhotoFile
+import com.the.businesscard.databinding.ActivityMainBinding
+
+import com.the.businesscard.utils.ConstantHelper
+import com.the.businesscard.utils.SelectPhotoFile
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

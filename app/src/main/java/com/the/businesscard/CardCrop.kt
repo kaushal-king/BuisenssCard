@@ -1,4 +1,4 @@
-package com.the.buisensscard
+package com.the.businesscard
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -8,8 +8,12 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.the.buisensscard.databinding.ActivityCaardCropBinding
-import com.the.buisensscard.utils.ConstantHelper
+
+
+
+import com.the.businesscard.databinding.ActivityCaardCropBinding
+
+import com.the.businesscard.utils.ConstantHelper
 import me.pqpo.smartcropperlib.SmartCropper
 
 class CardCrop : AppCompatActivity() {
