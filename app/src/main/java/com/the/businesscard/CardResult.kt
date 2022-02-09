@@ -184,7 +184,7 @@ class CardResult : AppCompatActivity() {
             }
 
             val imageUri: Uri? =
-                resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
 
             mPhotoFile= imageUri!!
 
