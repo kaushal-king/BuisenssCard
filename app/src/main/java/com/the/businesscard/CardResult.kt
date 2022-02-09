@@ -103,7 +103,7 @@ class CardResult : AppCompatActivity() {
 
 
         binding.btSaveImg.setOnClickListener {
-            saveImage(bitmap, "BusinessCard" + SimpleDateFormat("dd_MM_yyyy_ss").format(Date()))
+            saveImage(bitmap, "BusinessCard" + SimpleDateFormat("dd_MM_yyyy_HH_ss").format(Date()))
         }
 
     }
@@ -219,7 +219,7 @@ class CardResult : AppCompatActivity() {
         Log.e("path", "path: "+mPhotoFile, )
         intent.setDataAndType(mPhotoFile, "image/*");
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        val pIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
         var notificationManager: NotificationManager? = null
         var channel: NotificationChannel? = null
@@ -234,7 +234,8 @@ class CardResult : AppCompatActivity() {
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setWhen(System.currentTimeMillis())
                 .setVibrate(longArrayOf(0, 1000, 500, 1000))
-                .setContentIntent(pIntent)
+                .setLargeIcon(bitmap)
+                .setContentIntent(pendingIntent)
                 .setChannelId(ConstantHelper.NOTIFICATION_CHANNEL_ID)
                 .build()
 
