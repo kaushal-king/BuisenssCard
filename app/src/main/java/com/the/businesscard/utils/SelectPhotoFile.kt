@@ -32,36 +32,34 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class SelectPhotoFile(activity: Activity,  componentActivity: ComponentActivity) :
+class SelectPhotoFile(activity: Activity, componentActivity: ComponentActivity) :
     DefaultLifecycleObserver {
 
     private var mPhotoFile: File? = null
     private var mActivity = activity
-    private lateinit var photoIntent: Intent
 
-    private var activityResultLauncher: ActivityResultLauncher<Intent> = componentActivity.registerForActivityResult(
-         ActivityResultContracts.StartActivityForResult()
-     ) {
-         if (it.resultCode == Activity.RESULT_OK) {
-             val options = BitmapFactory.Options()
-             options.inPreferredConfig = Bitmap.Config.ARGB_8888
-             var bitmap = BitmapFactory.decodeFile(getImageFile().path, options)
-             val intent = Intent(mActivity, CardCrop::class.java)
-             ConstantHelper.bitmap = bitmap
-             mActivity.startActivity(intent)
-         }
-
-        
-     }
+    private var activityResultLauncher: ActivityResultLauncher<Intent> =
+        componentActivity.registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val options = BitmapFactory.Options()
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888
+                var bitmap = BitmapFactory.decodeFile(getImageFile().path, options)
+                val intent = Intent(mActivity, CardCrop::class.java)
+                ConstantHelper.bitmap = bitmap
+                mActivity.startActivity(intent)
+            }
 
 
+        }
 
 
     companion object {
         private var INSTANCE: SelectPhotoFile? = null
-        fun getInstance(activity: Activity,componentActivity: ComponentActivity): SelectPhotoFile {
+        fun getInstance(activity: Activity, componentActivity: ComponentActivity): SelectPhotoFile {
             return INSTANCE ?: synchronized(this) {
-                val instance = SelectPhotoFile(activity,componentActivity)
+                val instance = SelectPhotoFile(activity, componentActivity)
                 instance
             }
         }
