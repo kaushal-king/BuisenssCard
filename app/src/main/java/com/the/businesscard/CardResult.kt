@@ -234,7 +234,7 @@ class CardResult : AppCompatActivity() {
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setWhen(System.currentTimeMillis())
                 .setVibrate(longArrayOf(0, 1000, 500, 1000))
-                .setLargeIcon(bitmap)
+                .setStyle( NotificationCompat.BigPictureStyle().bigPicture(bitmap))
                 .setContentIntent(pendingIntent)
                 .setChannelId(ConstantHelper.NOTIFICATION_CHANNEL_ID)
                 .build()

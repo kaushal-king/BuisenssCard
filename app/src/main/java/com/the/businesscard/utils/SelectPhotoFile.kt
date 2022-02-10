@@ -4,40 +4,64 @@ import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-
 import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
-
+import androidx.lifecycle.DefaultLifecycleObserver
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.the.businesscard.BuildConfig
-
+import com.the.businesscard.CardCrop
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class SelectPhotoFile(activity: Activity) {
+class SelectPhotoFile(activity: Activity,  componentActivity: ComponentActivity) :
+    DefaultLifecycleObserver {
 
     private var mPhotoFile: File? = null
     private var mActivity = activity
+    private lateinit var photoIntent: Intent
+
+    private var activityResultLauncher: ActivityResultLauncher<Intent> = componentActivity.registerForActivityResult(
+         ActivityResultContracts.StartActivityForResult()
+     ) {
+         if (it.resultCode == Activity.RESULT_OK) {
+             val options = BitmapFactory.Options()
+             options.inPreferredConfig = Bitmap.Config.ARGB_8888
+             var bitmap = BitmapFactory.decodeFile(getImageFile().path, options)
+             val intent = Intent(mActivity, CardCrop::class.java)
+             ConstantHelper.bitmap = bitmap
+             mActivity.startActivity(intent)
+         }
+
+        
+     }
+
+
+
 
     companion object {
         private var INSTANCE: SelectPhotoFile? = null
-        fun getInstance(activity: Activity): SelectPhotoFile {
+        fun getInstance(activity: Activity,componentActivity: ComponentActivity): SelectPhotoFile {
             return INSTANCE ?: synchronized(this) {
-                val instance = SelectPhotoFile(activity)
+                val instance = SelectPhotoFile(activity,componentActivity)
                 instance
             }
         }
@@ -124,19 +148,15 @@ class SelectPhotoFile(activity: Activity) {
             if (photoFile != null) {
 
                 val photoURI = FileProvider.getUriForFile(
-                    mActivity, BuildConfig .APPLICATION_ID + ".provider",
+                    mActivity, BuildConfig.APPLICATION_ID + ".provider",
                     photoFile
                 )
                 mPhotoFile = photoFile
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                mActivity.startActivityForResult(
-                    takePictureIntent,
-                    ConstantHelper.REQUEST_TAKE_PHOTO
-                )
+                activityResultLauncher.launch(takePictureIntent)
             }
         }
     }
-
 
 
     @Throws(IOException::class)
