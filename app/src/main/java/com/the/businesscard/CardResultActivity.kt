@@ -31,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class CardResult : AppCompatActivity() {
+class CardResultActivity : AppCompatActivity() {
      lateinit var mPhotoFile: Uri
     lateinit var bitmap: Bitmap
     private lateinit var binding: ActivityCardResultBinding
@@ -58,7 +58,7 @@ class CardResult : AppCompatActivity() {
             binding.pbImg.visibility = View.VISIBLE
             binding.sbContras.progress = 17
             progressSeek = 1.7f
-            bitmap = changeBitmapContrastBrightness(ConstantHelper.bitmap, 1.7f, 0f)!!
+            bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, 1.7f, 0f)!!
             Glide.with(this)
                 .load(bitmap)
 
@@ -80,12 +80,12 @@ class CardResult : AppCompatActivity() {
         }
 
         binding.btBlackWhite.setOnClickListener {
-            converToGrayScale()
+            convertToGrayScale()
         }
 
         binding.sbContras.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seek: SeekBar?, p1: Int, p2: Boolean) {
-                var progress: Float = (seek!!.progress / 10F)
+                val progress: Float = (seek!!.progress / 10F)
                 binding.tvContras.text = progress.toString()
             }
 
@@ -94,7 +94,7 @@ class CardResult : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(seek: SeekBar?) {
-                var progress: Float = (seek!!.progress / 10F)
+                val progress: Float = (seek!!.progress / 10F)
                 progressSeek = progress
                 changeContras(progress)
             }
@@ -109,10 +109,10 @@ class CardResult : AppCompatActivity() {
     }
 
 
-    fun converToGrayScale() {
+    fun convertToGrayScale() {
         binding.ivImgResult.visibility = View.INVISIBLE
         binding.pbImg.visibility = View.VISIBLE
-        bitmap = changeBitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)?.let {
+        bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)?.let {
             getGrayScaleBitmap(
                 it
             )
@@ -128,7 +128,7 @@ class CardResult : AppCompatActivity() {
     fun changeContras(contrast: Float) {
         binding.ivImgResult.visibility = View.INVISIBLE
         binding.pbImg.visibility = View.VISIBLE
-        bitmap = changeBitmapContrastBrightness(ConstantHelper.bitmap, contrast, 0f)!!
+        bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, contrast, 0f)!!
 
         Glide.with(this)
             .load(bitmap)
@@ -153,7 +153,7 @@ class CardResult : AppCompatActivity() {
     }
 
 
-    fun changeBitmapContrastBrightness(bmp: Bitmap, contrast: Float, brightness: Float): Bitmap? {
+    fun bitmapContrastBrightness(bmp: Bitmap, contrast: Float, brightness: Float): Bitmap? {
         val cm = ColorMatrix(
             floatArrayOf(
                 contrast,
@@ -188,12 +188,13 @@ class CardResult : AppCompatActivity() {
 
             mPhotoFile= imageUri!!
 
-            outputStream = resolver.openOutputStream(imageUri!!)!!
+            outputStream = resolver.openOutputStream(imageUri)!!
         } else {
+           // val imagesDir =getExternalFilesDir("")
             val imagesDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                     .toString()
-
+            Log.e("kaushal", "saveImage: $imagesDir", )
 
             val image = File(imagesDir, "$name.jpg")
             mPhotoFile=  FileProvider.getUriForFile(
@@ -230,7 +231,6 @@ class CardResult : AppCompatActivity() {
                 .setStyle(NotificationCompat.BigTextStyle().bigText(description))
                 .setContentTitle("Photo Save Successfully")
                 .setContentText(description + "")
-                .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setWhen(System.currentTimeMillis())
                 .setVibrate(longArrayOf(0, 1000, 500, 1000))
@@ -248,10 +248,9 @@ class CardResult : AppCompatActivity() {
             channel.vibrationPattern = longArrayOf(0, 1000, 500, 1000)
             channel.enableVibration(true)
             channel.description = description
-            assert(notificationManager != null)
             notificationManager.createNotificationChannel(channel)
         }
-        assert(notificationManager != null)
+
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
 
 

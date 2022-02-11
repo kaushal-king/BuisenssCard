@@ -22,11 +22,11 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
         <activity
-            android:name="com.the.businesscard.CardResult"
+            android:name="com.the.businesscard.CardResultActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name="com.the.businesscard.CardCrop"
+            android:name="com.the.businesscard.CardCropActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity

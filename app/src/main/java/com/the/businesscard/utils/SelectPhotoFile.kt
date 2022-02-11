@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -17,15 +18,13 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.DefaultLifecycleObserver
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.the.businesscard.BuildConfig
-import com.the.businesscard.CardCrop
+import com.the.businesscard.CardCropActivity
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -46,13 +45,30 @@ class SelectPhotoFile(activity: Activity, componentActivity: ComponentActivity) 
                 val options = BitmapFactory.Options()
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888
                 var bitmap = BitmapFactory.decodeFile(getImageFile().path, options)
-                val intent = Intent(mActivity, CardCrop::class.java)
+                val intent = Intent(mActivity, CardCropActivity::class.java)
                 ConstantHelper.bitmap = bitmap
                 mActivity.startActivity(intent)
             }
 
 
         }
+
+    private var activityCameraResultLauncher = componentActivity.registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ){permissions->
+       if(!permissions.containsValue(false))
+       {
+           dispatchTakePictureIntent()
+       }
+//        permissions.entries.forEach {
+//            if(!it.value)
+//            {
+//                Log.e("permission", "${it.key} permission not grant", )
+//            }
+//          //  Log.e("DEBUG", "${it.key} = ${it.value}")
+//        }
+    }
+
 
 
     companion object {
@@ -80,54 +96,47 @@ class SelectPhotoFile(activity: Activity, componentActivity: ComponentActivity) 
         )
         val builder = AlertDialog.Builder(context)
         builder.setItems(items) { dialog: DialogInterface, item: Int ->
-            if (items[item] == "Take Photo") {
-                requestStoragePermission(true)
-
-            } else if (items[item] == "Choose from Library") {
-                requestStoragePermission(false)
-            } else if (items[item] == "Cancel") {
-                dialog.dismiss()
+            when {
+                items[item] == "Take Photo" -> {
+                    requestStoragePermission()
+                }
+//                items[item] == "Choose from Library" -> {
+//                    requestStoragePermission(false)
+//                }
+                items[item] == "Cancel" -> {
+                    dialog.dismiss()
+                }
             }
         }
         builder.show()
     }
 
-    private fun requestStoragePermission(isCamera: Boolean) {
-        Dexter.withActivity(mActivity)
-            .withPermissions(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA
-            )
-            .withListener(object : MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                    if (report.areAllPermissionsGranted()) {
-                        if (isCamera) {
-                            Log.e("TAG", "camera ")
-                            dispatchTakePictureIntent()
-                        } else {
-                            // dispatchGalleryIntent()
-                        }
-                    }
-                    // check for permanent denial of any permission
-                    if (report.isAnyPermissionPermanentlyDenied) {
 
-                    }
-                }
+     fun requestStoragePermission() {
+        val permission = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA,
+        )
+        when{
 
-                override fun onPermissionRationaleShouldBeShown(
-                    permissions: List<PermissionRequest?>?,
-                    token: PermissionToken
-                ) {
-                    token.continuePermissionRequest()
-                }
-            })
-            .withErrorListener { error ->
-                Toast.makeText(mActivity, "Error occurred! ", Toast.LENGTH_SHORT)
-                    .show()
+            hasPermissions(mActivity,  *permission )->{
+                Log.e("permission", "camera has permission ")
+                dispatchTakePictureIntent()
             }
-            .onSameThread()
-            .check()
+            else->{
+                Toast.makeText(mActivity, " Allow the Storage Permission", Toast.LENGTH_LONG).show()
+                activityCameraResultLauncher.launch(permission)
+            }
+        }
+
     }
+
+    private fun hasPermissions(context: Context, vararg permissions: String): Boolean = permissions.all {
+        Log.e("permission", "hasPermissions: $permissions", )
+        ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+    }
+
 
 
     private fun dispatchTakePictureIntent() {

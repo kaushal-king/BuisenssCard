@@ -25,6 +25,7 @@ import com.the.businesscard.utils.SelectPhotoFile
             selectPhotoFile.selectImageType()
 
         }
+
     }
 
 

@@ -16,7 +16,7 @@ import com.the.businesscard.databinding.ActivityCaardCropBinding
 import com.the.businesscard.utils.ConstantHelper
 import me.pqpo.smartcropperlib.SmartCropper
 
-class CardCrop : AppCompatActivity() {
+class CardCropActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCaardCropBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +63,7 @@ class CardCrop : AppCompatActivity() {
         }
 
         binding.btSaveCrop.setOnClickListener {
-            val intent = Intent(this, CardResult::class.java)
+            val intent = Intent(this, CardResultActivity::class.java)
             startActivity(intent)
             finish()
         }
