@@ -109,7 +109,7 @@ class CardResultActivity : AppCompatActivity() {
     }
 
 
-    fun convertToGrayScale() {
+    private fun convertToGrayScale() {
         binding.ivImgResult.visibility = View.INVISIBLE
         binding.pbImg.visibility = View.VISIBLE
         bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)?.let {
@@ -139,7 +139,7 @@ class CardResultActivity : AppCompatActivity() {
     }
 
 
-    fun getGrayScaleBitmap(original: Bitmap): Bitmap {
+    private fun getGrayScaleBitmap(original: Bitmap): Bitmap {
         val bmp = original.copy(Bitmap.Config.ARGB_8888, true)
         val bmpGrayscale = Bitmap.createBitmap(bmp.width, bmp.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bmpGrayscale)
@@ -153,7 +153,7 @@ class CardResultActivity : AppCompatActivity() {
     }
 
 
-    fun bitmapContrastBrightness(bmp: Bitmap, contrast: Float, brightness: Float): Bitmap? {
+    private fun bitmapContrastBrightness(bmp: Bitmap, contrast: Float, brightness: Float): Bitmap? {
         val cm = ColorMatrix(
             floatArrayOf(
                 contrast,
@@ -194,7 +194,7 @@ class CardResultActivity : AppCompatActivity() {
             val imagesDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                     .toString()
-            Log.e("kaushal", "saveImage: $imagesDir", )
+            Log.e("kaushal", "saveImage: $imagesDir")
 
             val image = File(imagesDir, "$name.jpg")
             mPhotoFile=  FileProvider.getUriForFile(
@@ -211,19 +211,19 @@ class CardResultActivity : AppCompatActivity() {
     }
 
 
-    fun createNotification(description: String) {
+    private fun createNotification(description: String) {
 
 
         val intent = Intent()
         intent.action = Intent.ACTION_VIEW
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-        Log.e("path", "path: "+mPhotoFile, )
-        intent.setDataAndType(mPhotoFile, "image/*");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        Log.e("path", "path: $mPhotoFile")
+        intent.setDataAndType(mPhotoFile, "image/*")
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
-        var notificationManager: NotificationManager? = null
-        var channel: NotificationChannel? = null
+        val notificationManager: NotificationManager?
+        val channel: NotificationChannel?
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification: Notification =
             NotificationCompat.Builder(this, ConstantHelper.NOTIFICATION_CHANNEL_ID)
