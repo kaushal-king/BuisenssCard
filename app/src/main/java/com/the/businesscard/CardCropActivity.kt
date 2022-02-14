@@ -8,19 +8,15 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-
-
-
-import com.the.businesscard.databinding.ActivityCaardCropBinding
-
+import com.the.businesscard.databinding.ActivityCardCropBinding
 import com.the.businesscard.utils.ConstantHelper
 import me.pqpo.smartcropperlib.SmartCropper
 
 class CardCropActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityCaardCropBinding
+    private lateinit var binding: ActivityCardCropBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCaardCropBinding.inflate(layoutInflater)
+        binding = ActivityCardCropBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         SmartCropper.buildImageDetector(this)
@@ -56,7 +52,7 @@ class CardCropActivity : AppCompatActivity() {
 
         }
 
-        binding.btCancel.setOnClickListener {
+        binding.ibCancel.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
