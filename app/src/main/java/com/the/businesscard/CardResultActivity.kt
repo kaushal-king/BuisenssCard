@@ -35,6 +35,9 @@ class CardResultActivity : AppCompatActivity() {
      lateinit var mPhotoFile: Uri
     lateinit var bitmap: Bitmap
     private lateinit var binding: ActivityCardResultBinding
+    var isGrayScale:Boolean=false
+    var isContrast:Boolean=false
+
     var progressSeek: Float = 0.0f
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,39 +50,49 @@ class CardResultActivity : AppCompatActivity() {
         bitmap = ConstantHelper.bitmap
         Glide.with(this)
             .load(ConstantHelper.bitmap)
-
             .into(binding.ivImgResult)
 
         binding.ivImgResult.visibility = View.VISIBLE
         binding.pbImg.visibility = View.GONE
 
         binding.btAutoContras.setOnClickListener {
+            isContrast=!isContrast
             binding.ivImgResult.visibility = View.INVISIBLE
             binding.pbImg.visibility = View.VISIBLE
             binding.sbContras.progress = 17
             progressSeek = 1.7f
-            bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, 1.7f, 0f)!!
+            if(isGrayScale){
+                bitmap = getGrayScaleBitmap(bitmapContrastBrightness(ConstantHelper.bitmap, 1.7f, 0f)!!)
+
+            }
+            else{
+                bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, 1.7f, 0f)!!
+
+            }
+
             Glide.with(this)
                 .load(bitmap)
-
                 .into(binding.ivImgResult)
             binding.ivImgResult.visibility = View.VISIBLE
             binding.pbImg.visibility = View.GONE
         }
 
         binding.btNormalMode.setOnClickListener {
+            isContrast=false
+            isGrayScale=false
             binding.ivImgResult.visibility = View.INVISIBLE
             binding.pbImg.visibility = View.VISIBLE
+            binding.sbContras.progress= 0
             bitmap = ConstantHelper.bitmap
             Glide.with(this)
                 .load(ConstantHelper.bitmap)
-
                 .into(binding.ivImgResult)
             binding.ivImgResult.visibility = View.VISIBLE
             binding.pbImg.visibility = View.GONE
         }
 
         binding.btBlackWhite.setOnClickListener {
+            isGrayScale=!isGrayScale
             convertToGrayScale()
         }
 
@@ -96,7 +109,7 @@ class CardResultActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seek: SeekBar?) {
                 val progress: Float = (seek!!.progress / 10F)
                 progressSeek = progress
-                changeContras(progress)
+                changeContrast(progress)
             }
         })
 
@@ -110,13 +123,27 @@ class CardResultActivity : AppCompatActivity() {
 
 
     private fun convertToGrayScale() {
+
         binding.ivImgResult.visibility = View.INVISIBLE
         binding.pbImg.visibility = View.VISIBLE
-        bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)?.let {
-            getGrayScaleBitmap(
-                it
-            )
-        }!!
+        if(isGrayScale){
+            if (progressSeek.equals(0.0f)){
+                Log.e("TAG", "convertToGrayScale: call", )
+                bitmap=getGrayScaleBitmap(ConstantHelper.bitmap)
+            }
+            else{
+                bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)?.let {
+                    getGrayScaleBitmap(
+                        it
+                    )
+                }!!
+            }
+        }else{
+            bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)!!
+        }
+
+
+
         Glide.with(this)
             .load(bitmap)
             .into(binding.ivImgResult)
@@ -125,11 +152,16 @@ class CardResultActivity : AppCompatActivity() {
     }
 
 
-    fun changeContras(contrast: Float) {
+    fun changeContrast(contrast: Float) {
         binding.ivImgResult.visibility = View.INVISIBLE
         binding.pbImg.visibility = View.VISIBLE
-        bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, contrast, 0f)!!
+        if(isGrayScale) {
+            bitmap = getGrayScaleBitmap( bitmapContrastBrightness(ConstantHelper.bitmap, contrast, 0f)!!)
+        }
+        else{
+            bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, contrast, 0f)!!
 
+        }
         Glide.with(this)
             .load(bitmap)
 
