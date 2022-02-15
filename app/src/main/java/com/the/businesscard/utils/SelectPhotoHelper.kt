@@ -14,6 +14,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -31,21 +32,26 @@ class SelectPhotoHelper(activity: Activity, componentActivity: ComponentActivity
     private var mPhotoFile: File? = null
     private var mActivity = activity
 
+
     private var activityResultLauncher: ActivityResultLauncher<Intent> =
+
         componentActivity.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
-        ) {
-            if (it.resultCode == Activity.RESULT_OK) {
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                 Log.e("TAGee", mPhotoFile.toString())
                 val options = BitmapFactory.Options()
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888
-                val bitmap = BitmapFactory.decodeFile(getImageFile().path, options)
+                val bitmap = BitmapFactory.decodeFile(mPhotoFile!!.path, options)
                 val intent = Intent(mActivity, CardCropActivity::class.java)
                 ConstantHelper.bitmap = bitmap
                 mActivity.startActivity(intent)
+
             }
 
 
         }
+
 
     private var activityCameraResultLauncher = componentActivity.registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -82,6 +88,9 @@ class SelectPhotoHelper(activity: Activity, componentActivity: ComponentActivity
 
     fun getImageFile(): File {
         return mPhotoFile!!
+    }
+    fun setImageFile(path:String) {
+        mPhotoFile=File(path)
     }
 
     private fun selectImageType(context: Context) {
@@ -154,8 +163,13 @@ class SelectPhotoHelper(activity: Activity, componentActivity: ComponentActivity
                     photoFile
                 )
                 mPhotoFile = photoFile
+                Log.e("TAG", mPhotoFile.toString())
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+               // takePictureIntent.putExtra("kk", mPhotoFile.toString())
                 activityResultLauncher.launch(takePictureIntent)
+
+
+                //activityImage.launch(photoURI)
             }
         }
     }
