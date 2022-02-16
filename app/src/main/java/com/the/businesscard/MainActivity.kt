@@ -10,9 +10,7 @@ import com.the.businesscard.utils.SelectPhotoHelper
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
      private var selectPhotoFile: SelectPhotoHelper = SelectPhotoHelper.getInstance(this,this)
-    init {
 
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -23,6 +21,7 @@ class MainActivity : AppCompatActivity() {
             selectPhotoFile.selectImageType()
 
         }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -36,6 +35,5 @@ class MainActivity : AppCompatActivity() {
         selectPhotoFile.setImageFile(savedInstanceState.get("imagePath").toString())
         Log.e("TAG", "onRestoreInstanceState: " + savedInstanceState.get("imagePath"))
     }
-
 
 }

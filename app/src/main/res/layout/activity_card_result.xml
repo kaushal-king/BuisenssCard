@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lightblack"
     tools:context=".CardResultActivity">
 
     <Button
         android:id="@+id/bt_auto_contras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:text="Contrast"
         app:layout_constraintBottom_toBottomOf="@+id/bt_normal_mode"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/bt_black_white"
         app:layout_constraintTop_toTopOf="@+id/bt_normal_mode"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -21,10 +23,11 @@
         android:id="@+id/bt_normal_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="10dp"
         android:text="Normal"
-        app:layout_constraintBottom_toTopOf="@+id/bt_save_img"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/bt_black_white"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -34,6 +37,7 @@
         android:text="GrayScale"
         app:layout_constraintBottom_toBottomOf="@+id/bt_normal_mode"
         app:layout_constraintEnd_toStartOf="@+id/bt_auto_contras"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/bt_normal_mode"
         app:layout_constraintTop_toTopOf="@+id/bt_normal_mode" />
 
@@ -41,23 +45,25 @@
         android:id="@+id/bt_save_img"
         android:layout_width="70dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@color/purple_500"
         android:src="@drawable/ic_baseline_save_24"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_img_result"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="15dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@+id/tv_contras"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_save_img"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/imageloading" />
 
     <ProgressBar
@@ -88,6 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="0.0"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/sb_contras"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

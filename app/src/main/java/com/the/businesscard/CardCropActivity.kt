@@ -34,7 +34,7 @@ class CardCropActivity : AppCompatActivity() {
                 )
                 .into(binding.ivCrop)
             ConstantHelper.bitmap = crop
-            binding.btCropPhoto.visibility = View.GONE
+            binding.btCropPhoto.visibility = View.INVISIBLE
             binding.btRotate.visibility = View.VISIBLE
 
         }

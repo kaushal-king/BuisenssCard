@@ -32,11 +32,11 @@ import java.util.*
 
 
 class CardResultActivity : AppCompatActivity() {
-     lateinit var mPhotoFile: Uri
+    lateinit var mPhotoFile: Uri
     lateinit var bitmap: Bitmap
     private lateinit var binding: ActivityCardResultBinding
-    var isGrayScale:Boolean=false
-    var isContrast:Boolean=false
+    var isGrayScale: Boolean = false
+    var isContrast: Boolean = false
 
     var progressSeek: Float = 0.0f
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,55 +44,59 @@ class CardResultActivity : AppCompatActivity() {
         binding = ActivityCardResultBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        binding.sbContras.visibility = View.INVISIBLE
+        binding.tvContras.visibility = View.INVISIBLE
 
         binding.ivImgResult.visibility = View.INVISIBLE
         binding.pbImg.visibility = View.VISIBLE
         bitmap = ConstantHelper.bitmap
+
         Glide.with(this)
             .load(ConstantHelper.bitmap)
             .into(binding.ivImgResult)
 
         binding.ivImgResult.visibility = View.VISIBLE
-        binding.pbImg.visibility = View.GONE
+        binding.pbImg.visibility = View.INVISIBLE
+
 
         binding.btAutoContras.setOnClickListener {
-            isContrast=!isContrast
+            isContrast = !isContrast
             binding.ivImgResult.visibility = View.INVISIBLE
             binding.pbImg.visibility = View.VISIBLE
+            binding.sbContras.visibility = View.VISIBLE
+            binding.tvContras.visibility = View.VISIBLE
             binding.sbContras.progress = 17
             progressSeek = 1.7f
-            if(isGrayScale){
-                bitmap = getGrayScaleBitmap(bitmapContrastBrightness(ConstantHelper.bitmap, 1.7f, 0f)!!)
-
-            }
-            else{
-                bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, 1.7f, 0f)!!
-
-            }
+            bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, 1.7f, 0f)!!
 
             Glide.with(this)
                 .load(bitmap)
                 .into(binding.ivImgResult)
+
             binding.ivImgResult.visibility = View.VISIBLE
-            binding.pbImg.visibility = View.GONE
+            binding.pbImg.visibility = View.INVISIBLE
         }
 
         binding.btNormalMode.setOnClickListener {
-            isContrast=false
-            isGrayScale=false
+            isContrast = false
+            isGrayScale = false
             binding.ivImgResult.visibility = View.INVISIBLE
             binding.pbImg.visibility = View.VISIBLE
-            binding.sbContras.progress= 0
+            binding.sbContras.visibility = View.INVISIBLE
+            binding.tvContras.visibility = View.INVISIBLE
             bitmap = ConstantHelper.bitmap
+
             Glide.with(this)
                 .load(ConstantHelper.bitmap)
                 .into(binding.ivImgResult)
             binding.ivImgResult.visibility = View.VISIBLE
-            binding.pbImg.visibility = View.GONE
+            binding.pbImg.visibility = View.INVISIBLE
         }
 
         binding.btBlackWhite.setOnClickListener {
-            isGrayScale=!isGrayScale
+            binding.sbContras.visibility = View.INVISIBLE
+            binding.tvContras.visibility = View.INVISIBLE
+            isGrayScale = !isGrayScale
             convertToGrayScale()
         }
 
@@ -113,8 +117,6 @@ class CardResultActivity : AppCompatActivity() {
             }
         })
 
-
-
         binding.btSaveImg.setOnClickListener {
             saveImage(bitmap, "BusinessCard" + SimpleDateFormat("dd_MM_yyyy_HH_ss").format(Date()))
         }
@@ -126,48 +128,29 @@ class CardResultActivity : AppCompatActivity() {
 
         binding.ivImgResult.visibility = View.INVISIBLE
         binding.pbImg.visibility = View.VISIBLE
-        if(isGrayScale){
-            if (progressSeek.equals(0.0f)){
-                Log.e("TAG", "convertToGrayScale: call", )
-                bitmap=getGrayScaleBitmap(ConstantHelper.bitmap)
-            }
-            else{
-                bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)?.let {
-                    getGrayScaleBitmap(
-                        it
-                    )
-                }!!
-            }
-        }else{
-            bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)!!
-        }
-
-
-
+        bitmap = getGrayScaleBitmap(ConstantHelper.bitmap)
+//        bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, progressSeek, 0f)?.let {
+//            getGrayScaleBitmap(
+//                it
+//            )
+//        }!!
         Glide.with(this)
             .load(bitmap)
             .into(binding.ivImgResult)
         binding.ivImgResult.visibility = View.VISIBLE
-        binding.pbImg.visibility = View.GONE
+        binding.pbImg.visibility = View.INVISIBLE
     }
 
 
     fun changeContrast(contrast: Float) {
         binding.ivImgResult.visibility = View.INVISIBLE
         binding.pbImg.visibility = View.VISIBLE
-        if(isGrayScale) {
-            bitmap = getGrayScaleBitmap( bitmapContrastBrightness(ConstantHelper.bitmap, contrast, 0f)!!)
-        }
-        else{
-            bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, contrast, 0f)!!
-
-        }
+        bitmap = bitmapContrastBrightness(ConstantHelper.bitmap, contrast, 0f)!!
         Glide.with(this)
             .load(bitmap)
-
             .into(binding.ivImgResult)
         binding.ivImgResult.visibility = View.VISIBLE
-        binding.pbImg.visibility = View.GONE
+        binding.pbImg.visibility = View.INVISIBLE
     }
 
 
@@ -218,18 +201,17 @@ class CardResultActivity : AppCompatActivity() {
             val imageUri: Uri? =
                 resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
 
-            mPhotoFile= imageUri!!
+            mPhotoFile = imageUri!!
 
             outputStream = resolver.openOutputStream(imageUri)!!
         } else {
-           // val imagesDir =getExternalFilesDir("")
             val imagesDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                     .toString()
             Log.e("kaushal", "saveImage: $imagesDir")
 
             val image = File(imagesDir, "$name.jpg")
-            mPhotoFile=  FileProvider.getUriForFile(
+            mPhotoFile = FileProvider.getUriForFile(
                 this,
                 applicationContext.packageName.toString() + ".provider",
                 image
@@ -238,7 +220,6 @@ class CardResultActivity : AppCompatActivity() {
         }
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         outputStream.close()
-
         createNotification("$name.jpg save in Download successFully")
     }
 
@@ -266,7 +247,7 @@ class CardResultActivity : AppCompatActivity() {
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setWhen(System.currentTimeMillis())
                 .setVibrate(longArrayOf(0, 1000, 500, 1000))
-                .setStyle( NotificationCompat.BigPictureStyle().bigPicture(bitmap))
+                .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
                 .setContentIntent(pendingIntent)
                 .setChannelId(ConstantHelper.NOTIFICATION_CHANNEL_ID)
                 .build()
